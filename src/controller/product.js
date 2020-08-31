@@ -1,12 +1,14 @@
 const express = require('express')
 const productModel = require('../models/product')
-const response = require('../config/res')
+const response = require('../helper/res')
 
 const product = {
     getProduct: async (req, res) => {
         try {
             const name = !req.query.search ? '': req.query.search
-            const data = await productModel.getProduct(name).then(res => res)
+            const sort = !req.query.sortBy ? 'id_product' : req.query.sortBy
+            const type = !req.query.type ? 'asc': req.query.type
+            const data = await productModel.getProduct(name, sort, type).then(res => res)
             response.success(res, data, 'success')
         } catch (err) {
             response.failed(res, [], err.message)
@@ -17,7 +19,6 @@ const product = {
             const data = req.body
             await productModel.addProduct(data)
             response.success(res, data, 'add product success')
-            // console.log(date);
         } catch (err) {
             response.failed(res, [], err.message)
         }

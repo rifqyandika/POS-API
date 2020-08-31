@@ -3,9 +3,9 @@ const { promise } = require('../config/db')
 const { NEWDATE } = require('mysql2/lib/constants/types')
 
 const products = {
-    getProduct: (name) => {
+    getProduct: (name, sort, type) => {
         return new Promise((resolve, reject) => {
-            db.query(`SELECT * FROM product`, (err, result) => {
+            db.query(`SELECT * FROM product WHERE name_product LIKE '%${name}%' ORDER BY ${sort} ${type}`, (err, result) => {
                 if(err){
                     reject(new Error(err))
                 }else {
