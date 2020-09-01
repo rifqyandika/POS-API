@@ -1,11 +1,13 @@
 const express = require('express')
 const route = express.Router()
-const { getProduct, addProduct, editProduct, deleteProduct } = require('../controller/product')
+const { getProduct, addProduct, editProduct, deleteProduct, detailProduct } = require('../controller/product')
+const upload = require('../helper/upload')
 
 // Product
 route.get('/product', getProduct)
-route.post('/add', addProduct)
+route.post('/add', upload.single('image') ,addProduct)
 route.put('/edit/:id', editProduct)
 route.delete('/delete/:id', deleteProduct)
+route.get('/detail/:id', detailProduct)
 
 module.exports = route
