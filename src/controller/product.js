@@ -44,9 +44,8 @@ const product = {
       try {
          const id = req.params.id
          const data = req.body
-         // const { url } = await cloudinary.v2.uploader.destroy(file.public_id)
-         // console.log(url);
-         const result = await productModel.editProduct(data, id)
+         data.image = req.file.filename
+         productModel.editProduct(data, id)
             .then((result) => {
                response.success(res, result, 'update success')
             })
