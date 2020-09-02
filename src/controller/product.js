@@ -3,7 +3,6 @@ const productModel = require('../models/product')
 const response = require('../helper/res')
 require('../helper/cloud')
 
-
 const product = {
    getProduct: async (req, res) => {
       try {
@@ -78,7 +77,6 @@ const product = {
       } catch (err) {
          response.failed(res, [], err.message)
       }
-
    }
 }
 
