@@ -4,10 +4,16 @@ const response = require('../helper/res')
 const category = {
     getCat: async (req, res) => {
         try {
-            const data = await CatModel.getCat().then(result => result)
+            const search = !req.query.search?'': req.query.search
+            const sort = !req.query.sortBy?'id_category': req.query.sortBy
+            const type = !req.query.type?'asc': req.query.type
+            const limit = !req.query.limit? 3: req.query.limit
+            const page = !req.query.page?1: req.query.page
+            const offset = page === 1?0: (page-1) * limit
+            const data = await CatModel.getCat(search, sort, type, limit, offset).then(result => result)
             response.success(res, data, 'Success')
         } catch (err) {
-            console.log('Server Internal error');
+            response.failed(err.message)
         }
     },
     addCat: async (req, res) => {

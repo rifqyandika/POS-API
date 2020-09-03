@@ -2,9 +2,9 @@ const mysql = require('mysql2')
 const db = require('../config/db')
 
 const category = {
-    getCat : () => {
+    getCat : (name, sort, type, limit, offset) => {
         return new Promise((resolve, reject) => {
-            db.query(`SELECT * FROM category`, (err, result) => {
+            db.query(`SELECT id_category, category FROM category WHERE category LIKE '%${name}%' ORDER BY ${sort} ${type} LIMIT ${limit} OFFSET ${offset}`, (err, result) => {
                 if(err){
                     reject(new Error(err))
                 }else {
