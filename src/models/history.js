@@ -26,7 +26,7 @@ const history = {
     },
     editHistory: (data, id) => {
         return new Promise((resolve, reject) => {
-            db.query(`UPDATE history SET cashier='${data.cashier}', orders='${data.orders}', amount='${data.amount}' WHERE invoice='${id}'`, (err, result) => {
+            db.query(`UPDATE history SET cashier='${data.cashier}', orders='${data.orders}', amount='${data.amount}', invoice='${data.invoice}' WHERE id='${id}'`, (err, result) => {
                 if(err){
                     reject(new Error(err))
                 }else{
@@ -37,7 +37,7 @@ const history = {
     },
     deleteHistory: (id) => {
         return new Promise((resolve, reject) => {
-            db.query(`DELETE FROM history WHERE invoice=${id}`, (err, result) => {
+            db.query(`DELETE FROM history WHERE id=${id}`, (err, result) => {
                 if(err){
                     reject(new Error(err))
                 }else{

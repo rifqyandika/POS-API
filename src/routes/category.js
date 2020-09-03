@@ -3,7 +3,7 @@ const route = express.Router()
 const { getCat, addCat, editCat, delCat } = require('../controller/category')
 
 // Category
-route.get('/category', getCat)
+route.get('/', getCat)
 route.post('/add', addCat)
 route.put('/edit/:id', editCat)
 route.delete('/delete/:id', delCat)

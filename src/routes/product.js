@@ -4,10 +4,10 @@ const { getProduct, addProduct, editProduct, deleteProduct, detailProduct } = re
 const upload = require('../helper/upload')
 
 // Product
-route.get('/product', getProduct)
+route.get('/', getProduct)
 route.post('/add', upload.single('image') ,addProduct)
 route.put('/edit/:id',upload.single('image') ,editProduct)
 route.delete('/delete/:id', deleteProduct)
-route.get('/detail/:id', detailProduct)
+route.get('/:id', detailProduct)
 
 module.exports = route
