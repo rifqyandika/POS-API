@@ -4,7 +4,7 @@ const fs = require('fs');
 const products = {
    getProduct: (name, sort, type, limit, offset) => {
       return new Promise((resolve, reject) => {
-         db.query(`SELECT id_product, product.name, price, image, category.category, date FROM product INNER JOIN category on product.id_category = category.id_category WHERE name LIKE '%${name}%' ORDER BY ${sort} ${type} LIMIT ${limit} OFFSET ${offset}`, (err, result) => {
+         db.query(`SELECT id_product, product.name, price, image, category.category, date, (SELECT COUNT(*) FROM product) AS count FROM product INNER JOIN category on product.id_category = category.id_category WHERE name LIKE '%${name}%' ORDER BY ${sort} ${type} LIMIT ${limit} OFFSET ${offset}`, (err, result) => {
             if (err) {
                reject(new Error(err))
             } else {

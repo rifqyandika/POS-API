@@ -14,6 +14,15 @@ const response = {
             data : data
         }
         res.json(result)
+    },
+    meta: (res, data, meta, message) => {
+        const result = {
+            status: 200,
+            message: message,
+            meta: meta,
+            data: data
+        }
+        res.json(result)
     }
 }
 

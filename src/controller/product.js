@@ -14,7 +14,13 @@ const product = {
          const offset = page === 1 ? 0 : (page - 1) * limit
          productModel.getProduct(name, sort, type, limit, offset)
             .then((result) => {
-               response.success(res, result, 'success')
+               const row = result[0].count
+               const meta = {
+                  totalItem: row,
+                  totalPage: Math.ceil(row/limit),
+                  page
+               }
+               response.meta(res, result, meta, 'success')
             })
             .catch((err) => {
                response.failed(res, [], err.message)
