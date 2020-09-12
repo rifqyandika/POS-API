@@ -49,7 +49,7 @@ const product = {
       try {
          const id = req.params.id
          const data = req.body
-         data.image = req.file.filename
+         data.image = !req.file? req.file : req.file.filename
          productModel.editProduct(data, id)
             .then((result) => {
                response.success(res, result, 'update success')
@@ -58,7 +58,7 @@ const product = {
                response.failed(res, [], err.message)
             })
       } catch (err) {
-         response.failed(res, [], 'Server Internal Error')
+         response.failed(res, [], err.message)
       }
    },
    deleteProduct: async (req, res) => {

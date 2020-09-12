@@ -10,7 +10,14 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({
-    storage
+    storage,
+    fileFilter(req, file, callback){
+        if(file.originalname.match(/\.(png)\b/)){
+            callback(null, true)
+        }else{
+            callback('image type must png')
+        }
+    }
 })
 
 

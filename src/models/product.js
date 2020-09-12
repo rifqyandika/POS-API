@@ -27,21 +27,30 @@ const products = {
    },
    editProduct: (data, id) => {
       return new Promise((resolve, reject) => {
-         db.query(`SELECT image FROM product WHERE id_product =${id}`, (err, result) => {
+         db.query(`SELECT * FROM product WHERE id_product =${id}`, (err, result) => {
             if (err) {
                reject(new Error(err))
             } else {
-               const img = result[0].image
-               fs.unlink(`src/file/${img}`, (err) => {
-                  db.query(`UPDATE product SET ? WHERE id_product = ?`,[data, id], (err, result) => {
+               resolve(new Promise((resolve, reject) => {
+                  let newImg = null
+                  if(!data.image){
+                     newImg = result[0].image
+                  } else {
+                     newImg = data.image
+                     fs.unlink(`src/file/${result[0].image}`, (err) => {
+                        if(err) console.log('gagal');
+                        console.log('sukses');
+                     })
+                  }
+                  db.query(`UPDATE product SET name='${data.name}', price='${data.price}', image='${newImg}', id_category='${data.category}' WHERE id_product ='${id}'`, (err, res) => {
                      // console.log(result);
-                     if(err){
+                     if (err) {
                         reject(new Error(err))
-                     }else {
-                        resolve(result)
+                     } else {
+                        resolve(res)
                      }
                   })
-               })
+               }))
             }
          })
       })

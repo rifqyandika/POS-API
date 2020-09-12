@@ -1,7 +1,8 @@
 const response = {
     success: (res, data, message) => {
         const result = {
-            status: 200,
+            code: 200,
+            status: true,
             message: message,
             data: data
         }
@@ -9,7 +10,8 @@ const response = {
     },
     failed: (res, data, message) => {
         const result = {
-            status: 500,
+            code: 500,
+            status: false,
             message: message,
             data : data
         }

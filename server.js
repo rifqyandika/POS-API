@@ -6,6 +6,7 @@ const db = require('./src/config/db')
 const product = require('./src/routes/product')
 const category = require('./src/routes/category')
 const history = require('./src/routes/history')
+const users = require('./src/routes/users')
 const cors = require('cors')
 
 db.connect((err) => {
@@ -20,6 +21,7 @@ app.use(express.static('src/file'))
 app.use('/product', product)
 app.use('/category', category)
 app.use('/history', history)
+app.use('/user', users)
 
 app.listen(process.env.PORT, () => {
     console.log(`Server running at port ${process.env.PORT}`);
