@@ -6,7 +6,7 @@ const auth = require('../helper/auth')
 
 // Product
 route.get('/', auth.authentication, auth.authorizatin ,getProduct)
-route.post('/add', upload.single('image') ,addProduct)
+route.post('/add', addProduct)
 route.put('/edit/:id',upload.single('image') ,editProduct)
 route.delete('/delete/:id', deleteProduct)
 route.get('/:id', detailProduct)
