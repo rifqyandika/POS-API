@@ -2,6 +2,8 @@ const express = require("express");
 const productModel = require("../models/product");
 const response = require("../helper/res");
 const upload = require("../helper/upload");
+const redis = require('redis')
+const redisClient = redis.createClient()
 
 const product = {
    getProduct: async (req, res) => {
@@ -15,6 +17,7 @@ const product = {
          productModel
             .getProduct(name, sort, type, limit, offset)
             .then((result) => {
+               redisClient.set('product', JSON.stringify(result))
                const row = result[0].count;
                const meta = {
                   totalItem: row,

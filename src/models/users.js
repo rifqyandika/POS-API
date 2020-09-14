@@ -22,6 +22,17 @@ const Users = {
                 }
             })
         })
+    },
+    update: (email) => {
+        return new Promise((resolve, reject) => {
+            db.query(`UPDATE users SET status= TRUE WHERE email='${email}'`, (err, result) => {
+               if (err) {
+                  reject(new Error(err))
+               } else {
+                  resolve(result)
+               }
+            })
+         })
     }
 }
 

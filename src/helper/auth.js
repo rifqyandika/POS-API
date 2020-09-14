@@ -15,14 +15,15 @@ const auth = {
         const token = req.headers.token
         jwt.verify(token, '123',(err, decoded) => {
             if(err && err.name === "TokenExpiredError"){
-                const decod = jwt.decode(token).id
-                jwt.sign({id: decod.id}, '123', { expiresIn: 1000 }, (err, tok) => {
-                    if(err){
-                        console.log(err);
-                    }else{
-                        response.success(res, {token: tok}, 'New Token', )
-                    }
-                })
+                response.failed(res, [], 'Token Expired')
+                // const decod = jwt.decode(token)
+                // jwt.sign({id: decod.id}, '123', { expiresIn: 1000 }, (err, tok) => {
+                //     if(err){
+                //         console.log(err);
+                //     }else{
+                //         response.success(res, {token: tok}, 'Token Expired & New Token', )
+                //     }
+                // })
             }else if(err && err.name === "JsonWebTokenError"){
                 response.failed(res, [], 'Token Invalid')
             }
