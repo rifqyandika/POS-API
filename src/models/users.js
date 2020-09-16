@@ -1,4 +1,5 @@
 const db = require('../config/db')
+const { reject, result } = require('lodash')
 
 const Users = {
     register : (data, generate) => {
@@ -33,6 +34,28 @@ const Users = {
                }
             })
          })
+    },
+    refreshToken: (token, id) => {
+        return new Promise((resolve, reject) => {
+            db.query(`UPDATE users SET refreshToken='${token}' WHERE id='${id}'`, (err, result) => {
+                if(err){
+                    reject(new Error(err))
+                }else{
+                    resolve(result)
+                }
+            })
+        })
+    },
+    deleteUser: (id) => {
+        return new Promise((resolve, reject) => {
+            db.query(`DELETE FROM users WHERE id=${id}`, (err, result) => {
+                if(err){
+                    reject(new Error(err))
+                }else{
+                    resolve(result)
+                }
+            })
+        })
     }
 }
 

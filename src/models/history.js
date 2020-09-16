@@ -12,10 +12,20 @@ const history = {
             })
         })
     },
+    addDetail: (data, id) => {
+        return new Promise((resolve, reject) => {
+            db.query(`INSERT INTO detailHistory (id_history, id_product, name, qty, price) VALUES ('${id}','${data.id_product}','${data.name}','${data.qty}', '${data.price}')`, (err, result) => {
+                if(err){
+                    reject(new Error(err))
+                }else {
+                    resolve(result)
+                }
+            } )
+        })
+    },
     addHistory: (data) => {
         return new Promise((resolve, reject) => {
-            db.query(`INSERT INTO history (cashier, orders, date, amount) 
-            VALUES ('${data.cashier}', '${data.orders}', NOW() ,'${data.amount}')`, (err, result) => {
+            db.query(`INSERT INTO history (cashier, invoice ,amount, ppn) VALUES ('${data.cashier}', '${data.invoice}','${data.amount}', '${data.ppn}')`, (err, result) => {
                 if(err){
                     reject(new Error(err))
                 }else {

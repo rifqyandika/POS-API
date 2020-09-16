@@ -44,6 +44,7 @@ const product = {
                productModel
                   .addProduct(data, body)
                   .then((result) => {
+                     redisClient.del('product', JSON.stringify(result))
                      response.success(res, result, "add product success");
                   })
                   .catch((err) => {
@@ -63,6 +64,7 @@ const product = {
          productModel
             .editProduct(data, id)
             .then((result) => {
+               redisClient.set('product', JSON.stringify(result))
                response.success(res, result, "update success");
             })
             .catch((err) => {
@@ -78,6 +80,7 @@ const product = {
          productModel
             .deleteProduct(id)
             .then((result) => {
+               redisClient.set('product', JSON.stringify(result))
                response.success(res, result, "Delete Product success");
             })
             .catch((err) => {

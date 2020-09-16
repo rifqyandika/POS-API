@@ -11,7 +11,7 @@ const Users = {
         const password = req.body.password;
         const salt = await bcrypt.genSalt(10);
         const generate = await bcrypt.hash(password, salt);
-        jwt.sign({ email: body.email, }, process.env.SECRET, { expiresIn: 1440 }, (err, token) => {
+        jwt.sign({ email: body.email }, process.env.SECRET, { expiresIn: 1440 }, (err, token) => {
             if (err) {
                 response.failed(res, [], err.message);
             } else {
@@ -63,11 +63,16 @@ const Users = {
                         response.failed(res, [], "Password invalid");
                     } else {
                         const id = result[0].id;
-                        jwt.sign({ id: id, }, process.env.SECRET, { expiresIn: 3600 }, (err, token) => {
+                        const level = result[0].level
+                        const refreshToken = jwt.sign({id:id}, process.env.SECRET)
+                        if(result[0].refreshToken === ''){
+                            userModel.refreshToken(refreshToken, id).then(result).catch(err)
+                        }
+                        jwt.sign({ id: id, level: level }, process.env.SECRET, { expiresIn: 15 }, (err, token) => {
                             if (err) {
                                 response.failed(res, [], err.message);
                             } else {
-                                response.success(res, { token: token }, "Login success");
+                                response.success(res, { token: token, refresh: refreshToken }, "Login success");
                             }
                         });
                     }
@@ -81,6 +86,11 @@ const Users = {
         const token = req.headers.token
         jwt.verify(token, process.env.SECRET, (err, decoded) => {
             if (err && err.name === "TokenExpiredError") {
+                console.log('error');
+            } else if (err && err.name === "JsonWebTokenError") {
+                response.failed(res, [], 'Token Invalid')
+            }
+            else {
                 const decod = jwt.decode(token)
                 jwt.sign({ id: decod.id }, process.env.SECRET, { expiresIn: 1440 }, (err, tok) => {
                     if (err) {
@@ -89,11 +99,6 @@ const Users = {
                         response.success(res, { token: tok }, 'New Token',)
                     }
                 })
-            } else if (err && err.name === "JsonWebTokenError") {
-                response.failed(res, [], 'Token Invalid')
-            }
-            else {
-                response.failed(res, [], 'Token active')
             }
         })
     },
@@ -112,6 +117,15 @@ const Users = {
                 })
             }
         })
+    },
+    deleteUser: (req, res) => {
+        const id = req.params.id
+        userModel.deleteUser(id)
+            .then((result) => {
+                response.success(res, [], 'user deleted')
+            }).catch((err) => {
+                response.failed(res, [], err.message)
+            })
     }
 };
 

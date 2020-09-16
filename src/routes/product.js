@@ -4,9 +4,10 @@ const { getProduct, addProduct, editProduct, deleteProduct, detailProduct } = re
 const upload = require('../helper/upload')
 const auth = require('../helper/auth')
 const redis = require('../helper/redis')
+const access = require('../helper/access')
 
 // Product
-route.get('/', auth.authentication, auth.authorizatin, redis.getProduct ,getProduct)
+route.get('/', auth.authentication, auth.authorizatin, access.accesAdmin ,redis.getProduct ,getProduct)
 route.post('/add', addProduct)
 route.put('/edit/:id',upload.single('image') ,editProduct)
 route.delete('/delete/:id', deleteProduct)
