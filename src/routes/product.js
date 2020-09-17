@@ -7,10 +7,10 @@ const redis = require('../helper/redis')
 const access = require('../helper/access')
 
 // Product
-route.get('/', auth.authentication, auth.authorizatin, access.accesAdmin ,redis.getProduct ,getProduct)
-route.post('/add', addProduct)
-route.put('/edit/:id',upload.single('image') ,editProduct)
-route.delete('/delete/:id', deleteProduct)
-route.get('/:id', detailProduct)
+route.get('/', redis.getProduct ,getProduct)
+route.post('/add',auth.authentication, auth.authorizatin, addProduct)
+route.put('/edit/:id',auth.authentication, auth.authorizatin,upload.single('image') ,editProduct)
+route.delete('/delete/:id',auth.authentication, auth.authorizatin, deleteProduct)
+route.get('/:id',auth.authentication, auth.authorizatin, detailProduct)
 
 module.exports = route

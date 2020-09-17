@@ -3,7 +3,7 @@ const db = require('../config/db')
 const history = {
     getHistory: (name) => {
         return new Promise((resolve, reject) => {
-            db.query(`SELECT * FROM history WHERE cashier LIKE '%${name}%'`, (err, result) => {
+            db.query(`SELECT id, cashier, invoice, amount, ppn, (SELECT COUNT(*) FROM history) AS count FROM history WHERE cashier LIKE '%${name}%'`, (err, result) => {
                 if(err){
                     reject(new Error(err))
                 }else{
@@ -14,7 +14,7 @@ const history = {
     },
     addDetail: (data, id) => {
         return new Promise((resolve, reject) => {
-            db.query(`INSERT INTO detail (history_id, product_id, name, qty, price) VALUES ('${id}','${data.product_id}','${data.name}','${data.qty}', '${data.price}')`, (err, result) => {
+            db.query(`INSERT INTO detail (id_history, id_product, name, qty, price) VALUES ('${id}','${data.id_product}','${data.name}','${data.qty}', '${data.price}')`, (err, result) => {
                 if(err){
                     reject(new Error(err))
                 }else {

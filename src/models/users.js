@@ -56,6 +56,17 @@ const Users = {
                 }
             })
         })
+    },
+    logoutUser: (id) => {
+        return new Promise((resolve, reject) => {
+            db.query(`UPDATE users SET refreshToken= null WHERE id='${id}'`, (err, resulut) => {
+                if(err){
+                    reject(new Error(err))
+                }else{
+                    resolve(result)
+                }
+            })
+        })
     }
 }
 

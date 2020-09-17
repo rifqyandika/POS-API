@@ -17,7 +17,7 @@ const product = {
          productModel
             .getProduct(name, sort, type, limit, offset)
             .then((result) => {
-               redisClient.set('product', JSON.stringify(result))
+               redisClient.set('product')
                const row = result[0].count;
                const meta = {
                   totalItem: row,
@@ -49,7 +49,7 @@ const product = {
                productModel
                   .addProduct(data, body)
                   .then((result) => {
-                     redisClient.del('product', JSON.stringify(result))
+                     redisClient.set('product')
                      response.success(res, result, "add product success");
                   })
                   .catch((err) => {
@@ -69,7 +69,7 @@ const product = {
          productModel
             .editProduct(data, id)
             .then((result) => {
-               redisClient.set('product', JSON.stringify(result))
+               redisClient.set('product')
                response.success(res, result, "update success");
             })
             .catch((err) => {
@@ -85,7 +85,7 @@ const product = {
          productModel
             .deleteProduct(id)
             .then((result) => {
-               redisClient.set('product', JSON.stringify(result))
+               redisClient.set('product')
                response.success(res, result, "Delete Product success");
             })
             .catch((err) => {

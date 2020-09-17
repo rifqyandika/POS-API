@@ -1,6 +1,8 @@
 const response = require('../helper/res')
 const histModels = require('../models/history')
 const { promise } = require('../config/db')
+const redis = require('redis')
+const redisClient = redis.createClient()
 
 const history = {
     getHistory: (req, res) => {
@@ -12,7 +14,14 @@ const history = {
         const offset = page === 1 ? 0 : (page - 1) * limit;
         histModels.getHistory(search, sort, type, limit, offset)
             .then(result => {
-                response.success(res, result, 'success')
+                redisClient.set('history', JSON.stringify(result))
+                const row = result[0].count;
+                const meta = {
+                    totalItem: row,
+                    totalPage: Math.ceil(row / limit),
+                    page,
+                };
+                response.meta(res, result, meta, "success");
             })
             .catch(err => {
                 response.failed(res, [], err.message)
@@ -22,6 +31,7 @@ const history = {
         const data = req.body
         histModels.addHistory(data)
             .then(result => {
+                redisClient.del('history')
                 const masterId = result.insertId
                 const order = data.orders.map((item) => {
                     histModels.addDetail(item, masterId)
@@ -42,6 +52,7 @@ const history = {
             const data = req.body
             histModels.editHistory(data, id)
                 .then(result => {
+                    redisClient.del('history')
                     response.success(res, result, 'success')
                 })
                 .catch(err => {
@@ -56,6 +67,7 @@ const history = {
             const id = req.params.id
             histModels.deleteHistory(id)
                 .then(result => {
+                    redisClient.del('history')
                     response.success(res, result, 'success')
                 })
                 .catch(err => {

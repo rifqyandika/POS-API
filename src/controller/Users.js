@@ -56,25 +56,35 @@ const Users = {
                 const pass = data.password;
                 const password = req.body.password;
                 const isMatch = await bcrypt.compare(password, pass);
-                if(data.status === 0){
+                if (data.status === 0) {
                     response.failed(res, [], "Please activation your email");
-                }else{
+                } else {
                     if (!isMatch) {
                         response.failed(res, [], "Password invalid");
                     } else {
                         const id = result[0].id;
                         const level = result[0].level
-                        const refreshToken = jwt.sign({id:id}, process.env.SECRET)
-                        if(result[0].refreshToken === ''){
-                            userModel.refreshToken(refreshToken, id).then(result).catch(err)
+                        const refresh = result[0].refreshToken
+                        if (!refresh) {
+                            const refreshToken = jwt.sign({ id: id }, process.env.SECRET)
+                            userModel.refreshToken(refreshToken, id)
+                            jwt.sign({ id: id, level: level }, process.env.SECRET, { expiresIn: 3600 }, (err, token) => {
+                                if (err) {
+                                    response.failed(res, [], err.message);
+                                } else {
+                                    response.success(res, { token: token, refresh: refreshToken }, "Login success");
+                                }
+                            });
+                        } else {
+                            jwt.sign({ id: id, level: level }, process.env.SECRET, { expiresIn: 3600 }, (err, token) => {
+                                if (err) {
+                                    response.failed(res, [], err.message);
+                                } else {
+                                    response.success(res, { token: token, refresh: result[0].refreshToken }, "Login success");
+                                }
+                            });
                         }
-                        jwt.sign({ id: id, level: level }, process.env.SECRET, { expiresIn: 15 }, (err, token) => {
-                            if (err) {
-                                response.failed(res, [], err.message);
-                            } else {
-                                response.success(res, { token: token, refresh: refreshToken }, "Login success");
-                            }
-                        });
+
                     }
                 }
             })
@@ -104,10 +114,10 @@ const Users = {
     },
     verify: (req, res) => {
         const token = req.params.token
-        jwt.verify(token, process.env.SECRET,(err, decode) => {
-            if(err){
+        jwt.verify(token, process.env.SECRET, (err, decode) => {
+            if (err) {
                 console.log(err);
-            }else {
+            } else {
                 const data = jwt.decode(token)
                 const email = data.email
                 userModel.update(email).then((result) => {
@@ -123,6 +133,15 @@ const Users = {
         userModel.deleteUser(id)
             .then((result) => {
                 response.success(res, [], 'user deleted')
+            }).catch((err) => {
+                response.failed(res, [], err.message)
+            })
+    },
+    logoutUser: (req, res) => {
+        const id = req.params.id
+        userModel.logoutUser(id)
+            .then((result) => {
+                response.success(res, [], 'user logout')
             }).catch((err) => {
                 response.failed(res, [], err.message)
             })
