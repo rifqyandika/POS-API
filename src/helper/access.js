@@ -9,12 +9,7 @@ const access = {
             if(err){
                 console.log(err);
             }else {
-                const level = decode.level
-                if(level == 1){
-                    response.success(res, [], 'kamu admin')
-                }else {
-                    next()
-                }
+                next()
             }
         })
     }

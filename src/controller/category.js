@@ -1,5 +1,7 @@
 const CatModel = require('../models/category')
 const response = require('../helper/res')
+const redis = require('redis')
+const redisClient = redis.createClient()
 
 const category = {
     getCat: (req, res) => {
@@ -12,6 +14,7 @@ const category = {
             const offset = page === 1 ? 0 : (page - 1) * limit
             CatModel.getCat(search, sort, type, limit, offset)
                 .then(result => {
+                    redisClient.set('category', JSON.stringify(result))
                     const row = result[0].count
                     const meta = {
                         totalItem: row,
@@ -28,14 +31,14 @@ const category = {
             response.failed(res, [], 'Server internal error')
         }
     },
-    addCat: async (req, res) => {
-        try {
-            const body = req.body
-            const data = await CatModel.addCat(body)
-            response.success(res, data, 'added')
-        } catch (err) {
-            response.failed(err.message)
-        }
+    addCat: (req, res) => {
+        const body = req.body
+            CatModel.addCat(body).then((result) => {
+                redisClient.del('category', JSON.stringify(result))
+                response.success(res, result, 'added')
+            }).catch((err) => {
+                response.failed(err.message)
+            })
     },
     editCat: async (req, res) => {
         try {

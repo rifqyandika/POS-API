@@ -32,12 +32,16 @@ module.exports= {
                     },
                     data: dataRedis.slice(start, end)
                 })
-                // const output = _.filter(newData, (obj) => {
-                //     return obj.name.includes(search)
-                // })
-                // const output = _.orderBy(newData, [sort], [type])
-
-                // response.success(res, output, 'redis search')
+            }else{
+                next()
+            }
+        })
+    },
+    getCat : (req, res, next) => {
+        redisClient.get('category', (err, data) => {
+            if(data){
+                const newData = JSON.parse(data)
+            response.success(res, newData, 'redis')
             }else{
                 next()
             }

@@ -37,7 +37,12 @@ const product = {
       try {
          upload.single("image")(req, res, (err) => {
             if (err) {
-               response.failed(res, [], err);
+               if(err.code === 'LIMIT_FILE_SIZE'){
+                  response.failed(res, [], 'File size max 500 KB') 
+                 }
+                  else{ 
+                    response.failed(res, [], err.message) 
+                 }
             } else {
                const data = req.body;
                body = req.file.filename;
