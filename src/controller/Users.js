@@ -21,7 +21,10 @@ const Users = {
         <h4>You can confirm your email by clicking the button below <br> '${process.env.HOST}${token}'</h4></center>
         `
                 let transporter = nodemailer.createTransport({
-                    service: 'gmail',
+                    host: 'smtp.gmail.com',
+                    port: 587,
+                    secure: false,
+                    requireTLS: true,
                     auth: {
                         user: process.env.USEREMAIL,
                         pass: process.env.USERPASS
