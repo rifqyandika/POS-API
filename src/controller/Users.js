@@ -96,24 +96,15 @@ const Users = {
             });
     },
     refresh: (req, res) => {
-        const token = req.headers.token
-        jwt.verify(token, process.env.SECRET, (err, decoded) => {
-            if (err && err.name === "TokenExpiredError") {
-                console.log('error');
-            } else if (err && err.name === "JsonWebTokenError") {
-                response.failed(res, [], 'Token Invalid')
-            }
-            else {
-                const decod = jwt.decode(token)
+        const token = req.body.token
+        const decod = jwt.decode(token)
                 jwt.sign({ id: decod.id }, process.env.SECRET, { expiresIn: 1440 }, (err, tok) => {
                     if (err) {
                         console.log(err);
                     } else {
-                        response.success(res, { token: tok }, 'New Token',)
+                        response.success(res, { Newtoken: tok }, 'New Token',)
                     }
                 })
-            }
-        })
     },
     verify: (req, res) => {
         const token = req.params.token
