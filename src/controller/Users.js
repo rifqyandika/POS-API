@@ -75,7 +75,7 @@ const Users = {
                                 if (err) {
                                     response.failed(res, [], err.message);
                                 } else {
-                                    response.success(res, { token: token, refresh: refreshToken }, "Login success");
+                                    response.success(res, { id_user: id ,token: token, refresh: refreshToken }, "Login success");
                                 }
                             });
                         } else {
@@ -83,7 +83,7 @@ const Users = {
                                 if (err) {
                                     response.failed(res, [], err.message);
                                 } else {
-                                    response.success(res, { token: token, refresh: result[0].refreshToken }, "Login success");
+                                    response.success(res, { id_user: id, token: token, refresh: result[0].refreshToken }, "Login success");
                                 }
                             });
                         }
